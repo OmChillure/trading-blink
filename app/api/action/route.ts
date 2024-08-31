@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       const initialPrice = await getPrice(chain);
       console.log(`Initial price: $${initialPrice}`);
       
-      await new Promise(resolve => setTimeout(resolve, 20000));
+      await new Promise(resolve => setTimeout(resolve, 9000));
       
       const newPrice = await getPrice(chain);
       console.log(`New price: $${newPrice}`);
