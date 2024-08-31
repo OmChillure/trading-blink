@@ -5,7 +5,7 @@ export const getCompletedAction = (stage: string, message: string): NextActionLi
     type: "inline",
     action: {
       description: message,
-      icon: `https://media1.tenor.com/m/r0viDQikSWcAAAAC/samoyedcoin-solana.gif`,
+      icon: `https://media1.tenor.com/m/E2Uhjmd2YDIAAAAC/multiversx-srb.gif`,
       label: ``,
       title: `Bid on ${stage}`,
       type: "completed",

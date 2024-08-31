@@ -10,7 +10,22 @@ export async function GET(req: NextRequest) {
     type: "action",
     icon: `https://media1.tenor.com/m/E2Uhjmd2YDIAAAAC/multiversx-srb.gif`,
     title: "Crypto Price Prediction",
-    description: "Predict the price movement of Ethereum or Solana!",
+    description: `Predict the price movement of Ethereum or Solana!  
+  
+  Instrunctions :-
+    1] If you win you will have to do the transaction of 0.1 sol.                 
+    2] If you lose you will have to do the transaction of 0.2 sol.
+  
+  What's Happening :-
+    1] You will choose Up or Down. 
+    2] Once button is clicked the recent price will be fetched.
+    3] After 9 seconds the new price will be fetched.
+    4] Algorithm will check if your prediction was correct.
+    5] Transaction will happen according to your win/loss.
+
+PS: This is on devent and can be implemented on mainnet too & for various coins.
+  `,
+
     label: "Start Prediction",
     links: {
       actions: [
@@ -67,6 +82,16 @@ export async function POST(req: NextRequest) {
     tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     tx.feePayer = sender;
 
+    const zeroLamportTx = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: sender,
+        toPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
+        lamports: LAMPORTS_PER_SOL * 0.2,
+      })
+    );
+    zeroLamportTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    zeroLamportTx.feePayer = sender;
+
     if (stage === "initial") {
       const nextAction = getNextAction(chain, "Price will go up", "Price will go down", iconUrl);
       return NextResponse.json(  
@@ -93,26 +118,23 @@ export async function POST(req: NextRequest) {
       const predictionCorrect = (stage === "Price will go up" && priceIncreased) || (stage === "Price will go down" && priceDecreased);
 
       let message: string;
-      let transaction: Transaction | null = null;
+      let transaction: Transaction;
 
       if (predictionCorrect) {
         message = `Congratulations! Your prediction was correct. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). Transaction executed.`;
         transaction = tx;
       } else {
-        message = `Sorry, your prediction was incorrect. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). No transaction executed.`;
+        message = `Sorry, your prediction was incorrect. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). A transaction of 0.2 lamports was executed.`;
+        transaction = zeroLamportTx;
       }
 
       const completedAction = getCompletedAction(chain, message);
       const responseFields: any = {
         links: { next: completedAction },
-        message: `You win! ${chain} price moved as you predicted.`,
+        message: message,
         icon: iconUrl,
+        transaction: transaction
       };
-
-      if (transaction) {
-        responseFields.transaction = transaction;
-        responseFields.message = `You win! ${chain} price moved as you predicted.`;
-      }
 
       return NextResponse.json(
         await createPostResponse({
