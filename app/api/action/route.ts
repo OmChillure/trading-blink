@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
 
     if (stage === "initial") {
       const nextAction = getNextAction(chain, "Price will go up", "Price will go down", iconUrl);
-      return NextResponse.json(
+      return NextResponse.json(  
         await createPostResponse({
           fields: {
             links: { next: nextAction },
