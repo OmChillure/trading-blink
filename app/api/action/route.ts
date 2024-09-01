@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
     description: `Predict the price movement of Ethereum or Solana!  
   
   Instrunctions :-
-    1] If you win you will have to do the transaction of 0.1 sol.                 
-    2] If you lose you will have to do the transaction of 0.2 sol.
+    1] If you win you will be credited with 0.2 sol.                
+    2] If you lose you will be debited with 0.1 sol.
   
   What's Happening :-
     1] You will choose Up or Down. 
@@ -72,25 +72,26 @@ export async function POST(req: NextRequest) {
     }
 
     const sender = new PublicKey(body.account);
-    const tx = new Transaction().add(
+
+    const txIncorrect = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: sender,
         toPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
         lamports: LAMPORTS_PER_SOL * 0.1,
       })
     );
-    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-    tx.feePayer = sender;
+    txIncorrect.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    txIncorrect.feePayer = sender;
 
-    const zeroLamportTx = new Transaction().add(
+    const txCorrect = new Transaction().add(
       SystemProgram.transfer({
-        fromPubkey: sender,
-        toPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
+        fromPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
+        toPubkey: sender,
         lamports: LAMPORTS_PER_SOL * 0.2,
       })
     );
-    zeroLamportTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-    zeroLamportTx.feePayer = sender;
+    txCorrect.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    txCorrect.feePayer = new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd");
 
     if (stage === "initial") {
       const nextAction = getNextAction(chain, "Price will go up", "Price will go down", iconUrl);
@@ -98,7 +99,7 @@ export async function POST(req: NextRequest) {
         await createPostResponse({
           fields: {
             links: { next: nextAction },
-            transaction: tx,
+            transaction: txIncorrect, 
             message: `You win! ${chain}'s price moved as you predicted.`,
           },
         }),
@@ -121,11 +122,11 @@ export async function POST(req: NextRequest) {
       let transaction: Transaction;
 
       if (predictionCorrect) {
-        message = `Congratulations! Your prediction was correct. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). Transaction executed.`;
-        transaction = tx;
+        message = `Congratulations! Your prediction was correct. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). 0.2 SOL has been credited to your account.`;
+        transaction = txCorrect;
       } else {
-        message = `Sorry, your prediction was incorrect. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). A transaction of 0.2 lamports was executed.`;
-        transaction = zeroLamportTx;
+        message = `Sorry, your prediction was incorrect. The price went ${priceIncreased ? "up" : "down"} (from $${initialPrice.toFixed(2)} to $${newPrice.toFixed(2)}). A transaction of 0.1 SOL was executed.`;
+        transaction = txIncorrect;
       }
 
       const completedAction = getCompletedAction(chain, message);
@@ -158,6 +159,7 @@ export async function POST(req: NextRequest) {
     });
   }
 }
+
 
 async function getPrice(chain: string): Promise<number> {
   const symbol = chain.toLowerCase() === "ethereum" ? "ETH" : "SOL";
