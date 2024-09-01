@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Transaction, PublicKey, SystemProgram, Connection, clusterApiUrl, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { ACTIONS_CORS_HEADERS, createPostResponse, ActionGetResponse } from "@solana/actions";
 import { getCompletedAction, getNextAction } from "@/app/helper";
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
 export async function GET(req: NextRequest) {
   let response: ActionGetResponse = {
     type: "action",
