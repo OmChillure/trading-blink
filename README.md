@@ -31,8 +31,8 @@ Bidding Blinks is a blink which allows users to create and participate in biddin
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/bidding_blinks.git
-   cd bidding_blinks
+   git clone https://github.com/yourusername/trading-blink.git
+   cd trading-blink
    ```
    
 2. **Install dependencies**:
