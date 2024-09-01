@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   What's Happening :-
     1] You will choose Up or Down. 
     2] Once button is clicked the recent price will be fetched.
-    3] After 9 seconds the new price will be fetched.
+    3] After 8 seconds the new price will be fetched.
     4] Algorithm will check if your prediction was correct.
     5] Transaction will happen according to your win/loss.
 PS: This is on devent and can be implemented on mainnet too & for various coins.
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     );
     txIncorrect.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     txIncorrect.feePayer = sender;
-    
+
     const txCorrect = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       const initialPrice = await getPrice(chain);
       console.log(`Initial price: $${initialPrice}`);
       
-      await new Promise(resolve => setTimeout(resolve, 9000));
+      await new Promise(resolve => setTimeout(resolve, 8000));
       
       const newPrice = await getPrice(chain);
       console.log(`New price: $${newPrice}`);
