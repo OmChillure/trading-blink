@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   
   Instrunctions :-
     1] If you win you will be credited with 0.2 sol.                
-    2] If you lose you will be debited with 0.1 sol.
+    2] If you lose you will be deebited with 0.1 sol.
   
   What's Happening :-
     1] You will choose Up or Down. 
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       const initialPrice = await getPrice(chain);
       console.log(`Initial price: $${initialPrice}`);
       
-      await new Promise(resolve => setTimeout(resolve, 8000));
+      await new Promise(resolve => setTimeout(resolve, 9000));
       
       const newPrice = await getPrice(chain);
       console.log(`New price: $${newPrice}`);
