@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Transaction, PublicKey, SystemProgram, Connection, clusterApiUrl, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { ACTIONS_CORS_HEADERS, createPostResponse, ActionGetResponse } from "@solana/actions";
 import { getCompletedAction, getNextAction } from "@/app/helper";
-
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
 export async function GET(req: NextRequest) {
   let response: ActionGetResponse = {
     type: "action",
@@ -14,7 +12,7 @@ export async function GET(req: NextRequest) {
   
   Instrunctions :-
     1] If you win you will be credited with 0.2 sol.                
-    2] If you lose you will be deebited with 0.1 sol.
+    2] If you lose you will be debited with 0.1 sol.
   
   What's Happening :-
     1] You will choose Up or Down. 
@@ -22,10 +20,8 @@ export async function GET(req: NextRequest) {
     3] After 9 seconds the new price will be fetched.
     4] Algorithm will check if your prediction was correct.
     5] Transaction will happen according to your win/loss.
-
 PS: This is on devent and can be implemented on mainnet too & for various coins.
   `,
-
     label: "Start Prediction",
     links: {
       actions: [
@@ -40,12 +36,10 @@ PS: This is on devent and can be implemented on mainnet too & for various coins.
       ],
     },
   };
-
   return NextResponse.json(response, {
     headers: ACTIONS_CORS_HEADERS,
   });
 }
-
 export const OPTIONS = GET;
 
 export async function POST(req: NextRequest) {
@@ -82,7 +76,7 @@ export async function POST(req: NextRequest) {
     );
     txIncorrect.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     txIncorrect.feePayer = sender;
-
+    
     const txCorrect = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: new PublicKey("CovFLcdngBTA2N9jbd3kRuid94HzSzF2NJ5Y54bAJSNd"),
@@ -99,7 +93,7 @@ export async function POST(req: NextRequest) {
         await createPostResponse({
           fields: {
             links: { next: nextAction },
-            transaction: txIncorrect, 
+            transaction: txIncorrect,
             message: `You win! ${chain}'s price moved as you predicted.`,
           },
         }),
@@ -160,11 +154,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
 async function getPrice(chain: string): Promise<number> {
-  const symbol = chain.toLowerCase() === "ethereum" ? "ETH" : "SOL";
-  const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD`);
-  const data = await response.json();
-
-  return data.USD;
+const symbol = chain.toLowerCase() === "ethereum" ? "ETH" : "SOL";
+const response = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD`);
+const data = await response.json();
+return data.USD;
 }
