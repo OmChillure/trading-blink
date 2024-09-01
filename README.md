@@ -7,25 +7,20 @@ Bidding Blinks is a blink which allows users to create and participate in biddin
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Features
 
-- **Create Blinks**: Users can create new bidding blinks with customizable parameters such as starting bid, bid increment, and time limit.
-- **Bid Participation**: Users can participate in active blinks by placing their bids within the defined time window.
-- **Real-time Updates**: Bids are updated in real-time, showing the highest bid and remaining time for the blink.
-- **Secure Transactions**: All bids and transactions are securely handled on the Solana blockchain, ensuring transparency and immutability.
+- **Bid Participation**: Users can participate in active by selection on which they want to bid and will the price go up or down.
+- **Real-time Price**: It fetches real time price of chian via api calls.
+- **Action Chaining**: Chaining of action blink one after other for bidding.
+- **Secure Transactions**: All bids and transactions are securely handled, ensuring transparency and immutability.
 - **User Wallet Integration**: Seamless integration with Solana wallets for bid submissions and asset transfers.
 
 ## Technologies Used
 
-- **TypeScript**: For building the application’s logic and handling blockchain interactions.
-- **CSS**: For styling the user interface and ensuring a responsive design.
-- **Solana**: Blockchain platform used for secure and fast transactions.
-- **Anchor Framework**: For managing smart contracts on Solana.
+- **TypeScript**: For building the application’s logic and handling blockchain interactions & algoritham for checking the winner.
+- **CSS**: For styling the interface and ensuring a design.
 
 ## Installation
 
