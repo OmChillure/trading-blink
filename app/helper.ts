@@ -17,7 +17,7 @@ export const getNextAction = (stage: string, stage1: string, stage2: string, ico
   return {
     type: "inline",
     action: {
-      description: `Predict if price of ${stage} will go up or down in the next 8 seconds.`,
+      description: `Predict if price of ${stage} will go up or down in the next 9 seconds.`,
       icon: `${icon}`,
       label: ``,
       title: `Bid on ${stage}`,
